@@ -1,220 +1,216 @@
 package in.ems.main;
 
+// NEW CODE BELOW WITH CONSOLE UI
+
+// EMS -> 
+
+// DB CONNECTION
+// MYSQL CONNECTOR JAR FILE ADD
+// EMS MAIN CLASS
+// CRUD OPERATIONS -> CREATE, READ, UPDATE, DELETE OPERATIONS ON EMPLOYEES
+// PACKAGES --> 
+	// 1. AUTH PKG -> REGISTRATION AND LOGIN 
+	// 2. DB PKG -> DB CONNECTION BUILDING, LOGIN AND REGISTRATION WITH DB CREDS
+	// 3. EMP PKG -> WHERE WE HAVE CREATED SCHEMA FOR AN EMPLOYEE 
+	// 4. MAIN PKG -> MAIN CLASS CODE
+	// 5. UI PKG -> DEFINES CONSOLE UI
+
+
+
 import java.util.Scanner;
 
 import in.ems.Db.DBLogin;
 import in.ems.Db.DBRegistration;
 import in.ems.auth.Login;
 import in.ems.auth.Registration;
+import in.ems.ui.ConsoleUI;
 
 public class Main {
 
-	public static void main(String[] args) {
-		
-		String check = "";
-		int choice;
-		
-		do {
-		System.out.println("\n\n\t-------------- EMPLOYEE MANAGEMENT SYSTEM --------------\n\n");
-		
-		System.out.println("\t\t\t SELECT ONE : \n");
-		System.out.println("\t\t\t 1. Login");
-		System.out.println("\t\t\t 2. Register");
+    public static void main(String[] args) {
 
-		Scanner sc = new Scanner(System.in);
-		
-		System.out.print("\n\t\t Enter your choice : ");
-		choice = sc.nextInt();	
-		sc.nextLine();
-		
-		switch(choice)
-		{
-			case 1 :  
-				System.out.println("\n\n\t-------------- WELCOME TO EMS LOGIN --------------\n\n");
-				
-				System.out.print("\t\t\t ENTER YOUR USERNAME : ");
-				String loginUsername = sc.nextLine();
-				
-				System.out.print("\t\t\t ENTER YOUR PASSWORD : ");
-				String loginPassword = sc.nextLine();
-				
-				Login login = new Login(loginUsername, loginPassword);
-				login.validateLogin();
-				System.out.println("\n\tSuccessfully Logged in... ");
-				
-				
-				
-				
-				System.out.println("\n\n\t-------------- WELCOME " + loginUsername + " TO EMS  --------------\n\n");
-				
-				System.out.println("\n\n\t 1. ADD EMPLOYEE");
-				System.out.println("\n\n\t 2. UPDATE EMPLOYEE");
-				System.out.println("\n\n\t 3. DELETE EMPLOYEE");
-				System.out.println("\n\n\t 4. VIEW EMPLOYEE");
-				System.out.println("\n\n\t 5. GO BACK");
-				
-				System.out.print("\n\t\t Enter your choice : ");
-				int choiceAfterLogin = sc.nextInt();   // 1
-				
-				switch (choiceAfterLogin) 
-				{
-					case 1: 
-						// ADD EMPLOYEE 
-						
-						System.out.println("\n\n\t-------------- ADD EMPLOYEES  --------------\n\n");
-						
-						sc.nextLine(); // ⭐ Clear buffer before reading name
+        Scanner sc = new Scanner(System.in);
+        boolean appRunning = true;
 
-						System.out.print("\t ENTER YOUR EMPLOYEE NAME : ");
-						String ename = sc.nextLine();
+        while (appRunning) {
 
-						System.out.print("\t ENTER YOUR EMPLOYEE ID : ");
-						int eid = sc.nextInt();
+            ConsoleUI.header("EMPLOYEE MANAGEMENT SYSTEM");
 
-						System.out.print("\t ENTER YOUR EMPLOYEE SALARY : ");
-						double esal = sc.nextDouble();
-						sc.nextLine(); // consume newline
+            ConsoleUI.menuItem(1, "Login");
+            ConsoleUI.menuItem(2, "Register");
+            ConsoleUI.menuItem(3, "Exit");
 
-						System.out.print("\t ENTER YOUR EMPLOYEE ADDRESS : ");
-						String address = sc.nextLine();
+            ConsoleUI.line();
+            System.out.print(" Enter choice : ");
+            int choice = sc.nextInt();
+            sc.nextLine();
 
-						System.out.print("\t ENTER YOUR EMPLOYEE COMPANY NAME : ");
-						String company = sc.nextLine();
+            switch (choice) {
 
+                case 1:
+                    ConsoleUI.subHeader("LOGIN");
 
-						
-						 boolean status = DBLogin.addEmployee(eid, ename, esal, address, company);
+                    System.out.print(" Username : ");
+                    String username = sc.nextLine();
 
-						    if (status) {
-						        System.out.println("\n\t Employee added successfully ✅");
-						    } else {
-						        System.out.println("\n\t Failed to add employee ❌");
-						    }
-						
-					break;
-					
-					case 2: 
-						// UPDATE EMPLOYEE
-						 System.out.println("\n\n\t-------------- UPDATE EMPLOYEE --------------\n\n");
+                    System.out.print(" Password : ");
+                    String password = sc.nextLine();
 
-						    sc.nextLine(); // ⭐ clear buffer after menu choice
+                    Login login = new Login(username, password);
 
-						    System.out.print("\t ENTER EMPLOYEE ID TO UPDATE : ");
-						    int upId = sc.nextInt();
+                    if (!login.validateLogin()) {
+                        ConsoleUI.error("Invalid username or password");
+                        break;
+                    }
 
-						    System.out.print("\t ENTER NEW EMPLOYEE SALARY : ");
-						    double upSalary = sc.nextDouble();
-						    sc.nextLine(); // consume newline
+                    ConsoleUI.success("Login successful");
+                    boolean loggedIn = true;
 
-						    System.out.print("\t ENTER NEW EMPLOYEE NAME : ");
-						    String upName = sc.nextLine();
+                    while (loggedIn) {
 
-						    System.out.print("\t ENTER NEW EMPLOYEE ADDRESS : ");
-						    String upAddress = sc.nextLine();
+                        ConsoleUI.header("DASHBOARD - " + username);
 
-						    System.out.print("\t ENTER NEW EMPLOYEE COMPANY NAME : ");
-						    String upCompany = sc.nextLine();
+                        ConsoleUI.menuItem(1, "Add Employee");
+                        ConsoleUI.menuItem(2, "Update Employee");
+                        ConsoleUI.menuItem(3, "Delete Employee");
+                        ConsoleUI.menuItem(4, "View Employees");
+                        ConsoleUI.menuItem(5, "Logout");
 
-						    boolean updated = DBLogin.updateEmployee(
-						            upId, upName, upSalary, upAddress, upCompany
-						    );
+                        ConsoleUI.line();
+                        System.out.print(" Enter choice : ");
+                        int dashChoice = sc.nextInt();
+                        sc.nextLine();
 
-						    if (updated) {
-						        System.out.println("\n\t Employee updated successfully ✅");
-						    } else {
-						        System.out.println("\n\t Employee ID not found ❌");
-						    }
-						
-						
-						
-					break;
-					
-					case 3: 
-						 // DELETE EMPLOYEE
-					    System.out.println("\n\n\t-------------- DELETE EMPLOYEE --------------\n\n");
+                        switch (dashChoice) {
 
-					    sc.nextLine(); // clear buffer after menu choice
+                            case 1:
+                                ConsoleUI.subHeader("ADD EMPLOYEE");
 
-					    System.out.print("\t ENTER EMPLOYEE ID TO DELETE : ");
-					    int delId = sc.nextInt();
+                                System.out.print(" Employee ID     : ");
+                                int eid = sc.nextInt();
+                                sc.nextLine();
 
-					    System.out.print("\n\t Are you sure you want to delete this employee? (Y/N): ");
-					    char confirm = sc.next().charAt(0);
+                                System.out.print(" Employee Name   : ");
+                                String ename = sc.nextLine();
 
-					    if (confirm == 'Y' || confirm == 'y') {
+                                System.out.print(" Salary          : ");
+                                double esal = sc.nextDouble();
+                                sc.nextLine();
 
-					        boolean deleted = DBLogin.deleteEmployee(delId);
+                                System.out.print(" Address         : ");
+                                String address = sc.nextLine();
 
-					        if (deleted) {
-					            System.out.println("\n\t Employee deleted successfully ✅");
-					        } else {
-					            System.out.println("\n\t Employee ID not found ❌");
-					        }
+                                System.out.print(" Company         : ");
+                                String company = sc.nextLine();
 
-					    } else {
-					        System.out.println("\n\t Delete operation cancelled ❎");
-					    }
-					break;
-					
-					case 4: 
-						  // VIEW EMPLOYEES
-					    System.out.println("\n\n\t-------------- VIEW EMPLOYEES --------------\n\n");
+                                if (DBLogin.addEmployee(eid, ename, esal, address, company))
+                                    ConsoleUI.success("Employee added successfully");
+                                else
+                                    ConsoleUI.error("Failed to add employee");
 
-					    DBLogin.viewEmployees();
+                                break;
 
-					    System.out.println("\n\t Press Enter to continue...");
-					    sc.nextLine();
-					break;
-					
-					case 5: 
-						//code
-					break;
-					
-					default:
-						//code
-					
-				}
-				
-			break;
-			
-			case 2:
-				
-				System.out.println("\n\n\t-------------- WELCOME TO EMS REGISTRATIUON --------------\n\n");
-				
-				System.out.print("\t\t\t ENTER YOUR NAME : \n");
-				String name = sc.nextLine();
-				
-				System.out.print("\t\t\t ENTER YOUR USERNAME : \n");
-				String username = sc.nextLine();
-				
-				System.out.print("\t\t\t ENTER YOUR EMAIL : \n");
-				String email = sc.nextLine();
-				
-				System.out.print("\t\t\t ENTER YOUR PASSWORD : \n");
-				String password = sc.nextLine();
-				
-				Registration res = new Registration(name, username, email, password);
-				DBRegistration.insertReg(res);
+                            case 2:
+                                ConsoleUI.subHeader("UPDATE EMPLOYEE");
 
-				res.displayAll();
-				
-				
-			break;
-			
-			default:
-				System.out.println("Invalid choice");
-		}
-		
-		System.out.print("\n\t\t Do you want to Logout (y/n) : ");
-		check = sc.nextLine();  // y
-		
-		}while(check.equals("n"));
-		
-		
-		
-		
-		System.out.println("\n\n\t-------------- FINISHED --------------\n\n");
-	
-	}
+                                System.out.print(" Employee ID     : ");
+                                int upId = sc.nextInt();
 
+                                System.out.print(" New Salary      : ");
+                                double upSal = sc.nextDouble();
+                                sc.nextLine();
+
+                                System.out.print(" New Name        : ");
+                                String upName = sc.nextLine();
+
+                                System.out.print(" New Address     : ");
+                                String upAddr = sc.nextLine();
+
+                                System.out.print(" New Company     : ");
+                                String upComp = sc.nextLine();
+
+                                if (DBLogin.updateEmployee(upId, upName, upSal, upAddr, upComp))
+                                    ConsoleUI.success("Employee updated successfully");
+                                else
+                                    ConsoleUI.error("Employee not found");
+
+                                break;
+
+                            case 3:
+                                ConsoleUI.subHeader("DELETE EMPLOYEE");
+
+                                System.out.print(" Employee ID : ");
+                                int delId = sc.nextInt();
+
+                                System.out.print(" Confirm (Y/N) : ");
+                                char confirm = sc.next().charAt(0);
+
+                                if (confirm == 'Y' || confirm == 'y') {
+                                    if (DBLogin.deleteEmployee(delId))
+                                        ConsoleUI.success("Employee deleted");
+                                    else
+                                        ConsoleUI.error("Employee not found");
+                                } else {
+                                    ConsoleUI.info("Delete operation cancelled");
+                                }
+
+                                break;
+
+                            case 4:
+                                ConsoleUI.subHeader("EMPLOYEE LIST");
+                                DBLogin.viewEmployees();
+                                break;
+
+                            case 5:
+                                loggedIn = false;
+                                ConsoleUI.info("Logged out successfully");
+                                break;
+
+                            default:
+                                ConsoleUI.error("Invalid option");
+                        }
+                    }
+                    break;
+
+                case 2:
+                    ConsoleUI.subHeader("REGISTRATION");
+
+                    System.out.print(" Name     : ");
+                    String name = sc.nextLine();
+
+                    System.out.print(" Username : ");
+                    String regUser = sc.nextLine();
+
+                    System.out.print(" Email    : ");
+                    String email = sc.nextLine();
+
+                    System.out.print(" Password : ");
+                    String regPass = sc.nextLine();
+
+                    Registration reg = new Registration(name, regUser, email, regPass);
+                    DBRegistration.insertReg(reg);
+
+                    ConsoleUI.success("Registration completed");
+                    break;
+
+                case 3:
+                    appRunning = false;
+                    ConsoleUI.info("Application closed");
+                    break;
+
+                default:
+                    ConsoleUI.error("Invalid choice");
+            }
+        }
+        sc.close();
+    }
 }
+
+
+
+
+
+
+
+
+
